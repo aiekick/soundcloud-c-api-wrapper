@@ -122,7 +122,12 @@ int SoundCloudCAPI_performMethod(SoundCloudCAPI *api,const char* httpMethod,cons
 	
 	reply = oauth_send_data(url,body,bodylen,*header?header:0,httpMethod);
 	*data=reply;
-	*size_recv=strlen(reply);
+    if (reply != NULL) {
+        *size_recv=strlen(reply);
+        *errornum = SoundCloudCAPICallback_didFinishWithData;
+    } else {
+        *errornum = SoundCloudCAPICallback_didFailWithError;
+    }
 
 	free(url);
 	free(header);
